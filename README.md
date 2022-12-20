@@ -51,9 +51,23 @@ WHERE `length`  > (SELECT AVG (`length`) FROM film)
 ![alt text](https://github.com/Fameq/12.04-hw/blob/master/img/task3.png)
 
 ```sql
-SELECT (district)
-FROM address
-WHERE district  LIKE 'K%' and district LIKE '%a' and district NOT LIKE '% %'; 
+SELECT my_date, sum_price, COUNT(r.rental_id) as my_count
+FROM
+	(SELECT my_date, sum_price
+	FROM
+		(
+		SELECT  DATE_FORMAT(payment_date, '%Y-%M') as my_date, SUM(amount) as sum_price 
+		FROM payment p  
+		GROUP BY DATE_FORMAT(payment_date, '%Y-%M')
+		)
+	mytable 
+	ORDER BY sum_price  DESC 
+	Limit 1
+	)
+mytable_2
+JOIN rental r on DATE_FORMAT(r.rental_date, '%Y-%M') = mytable_2.my_date 
+GROUP BY my_date, sum_price 
+;
 ```
 
 
